@@ -25,6 +25,7 @@
 #include <iostream>
 #include <stdlib.h>
 
+
 #ifdef __APPLE__
 #include <OpenGL/OpenGL.h>
 #include <GLUT/glut.h>
@@ -44,6 +45,9 @@ const float FLOOR_SIZE = 20.0f; //The length of each side of the floor
 float _angle = 30.0f;
 MD2Model* _model;
 int _textureId;
+int _textureId2;
+
+GLuint makeaTree;
 
 //The forward position of the guy relative to an arbitrary floor "tile"
 float _guyPos = 0;
@@ -97,10 +101,9 @@ void initRendering()
 	delete image;
 
 	//Load clouds texture
-	/*
 	Image* image2 = loadBMP("clouds.bmp");
-	_textureId = loadTexture(image2);
-	delete image2;*/
+	_textureId2 = loadTexture(image2);
+	delete image2;
 
 	 glEnable(GL_DEPTH_TEST); // Enable depth testing.
 
@@ -152,7 +155,7 @@ void drawScene()
 	  gluLookAt(0.0, 5.0, 30.0, 0.0, 10.0, 0.0, 0.0, 1.0, 0.0);
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
-	 glClearColor(1.0, 1.0, 1.0, 0.0); 
+	 glClearColor(0.74902, 0.847059, 1, 0.0); 
 	glTranslatef(0.0f, 0.0f, -20.0f);
 	glRotatef(-_angle, 0.0f, 1.0f, 0.0f);
 	
@@ -227,25 +230,16 @@ void drawScene()
 	glEnd(); 
     
 	// In Progress Draw Clouds
-	/*
 	glTranslatef(0.0f, -5.4f, 0.0f);
 	glEnable(GL_TEXTURE_2D);
-	glBindTexture(GL_TEXTURE_2D, _textureId);
+	glBindTexture(GL_TEXTURE_2D, _textureId2);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	
-	glBegin(GL_QUADS);
-		glNormal3f(0.0f, 1.0f, 0.0f);
-		glTexCoord2d(0.0,0.0);
-		glVertex3f(0.0f, 0.0f, 0.0f);
-		glTexCoord2f(1.0,0.0);
-		glVertex3f(1.0f, 0.0f, 0.0f);
-		glTexCoord2f(1.0f, 1.0f);
-		glVertex3f(1.0f, 1.0f, 1.0f);
-		glTexCoord2f(0.0f, 0.1f);
-		glVertex3f(0.0f, 0.0f, 1.0f);
-	glEnd();
-	*/
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+
+
 
 
 	//glShadeModel(GL_SMOOTH); // Restore smooth shading.
@@ -281,11 +275,12 @@ void update(int value) {
 	glutTimerFunc(25, update, 0);
 }
 
+
+
 int main(int argc, char** argv) {
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
 	glutInitWindowSize(400, 400);
-	
 	glutCreateWindow("Animation - videotutorialsrock.com");
 	initRendering();
 	
