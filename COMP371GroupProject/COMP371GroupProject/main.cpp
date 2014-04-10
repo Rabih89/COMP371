@@ -44,6 +44,7 @@ const float FLOOR_SIZE = 20.0f; //The length of each side of the floor
 float _angle = 30.0f;
 MD2Model* _model;
 int _textureId;
+
 //The forward position of the guy relative to an arbitrary floor "tile"
 float _guyPos = 0;
 
@@ -94,6 +95,12 @@ void initRendering()
 	Image* image = loadBMP("vtr.bmp");
 	_textureId = loadTexture(image);
 	delete image;
+
+	//Load clouds texture
+	/*
+	Image* image2 = loadBMP("clouds.bmp");
+	_textureId = loadTexture(image2);
+	delete image2;*/
 
 	 glEnable(GL_DEPTH_TEST); // Enable depth testing.
 
@@ -198,13 +205,12 @@ void drawScene()
 	}
 	
 	 
-	//Draw the floor
+	//Draw floor grass
 	glTranslatef(0.0f, -5.4f, 0.0f);
 	glEnable(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D, _textureId);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	
 	glBegin(GL_QUADS);
 	
 	glNormal3f(0.0f, 1.0f, 0.0f);
@@ -218,8 +224,30 @@ void drawScene()
 	glTexCoord2f(0.0f, _guyPos / FLOOR_TEXTURE_SIZE);
 	glVertex3f(1000.0f, 0.0f, -1000.0f);
 	
-	glEnd();
+	glEnd(); 
     
+	// In Progress Draw Clouds
+	/*
+	glTranslatef(0.0f, -5.4f, 0.0f);
+	glEnable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D, _textureId);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	
+	glBegin(GL_QUADS);
+		glNormal3f(0.0f, 1.0f, 0.0f);
+		glTexCoord2d(0.0,0.0);
+		glVertex3f(0.0f, 0.0f, 0.0f);
+		glTexCoord2f(1.0,0.0);
+		glVertex3f(1.0f, 0.0f, 0.0f);
+		glTexCoord2f(1.0f, 1.0f);
+		glVertex3f(1.0f, 1.0f, 1.0f);
+		glTexCoord2f(0.0f, 0.1f);
+		glVertex3f(0.0f, 0.0f, 1.0f);
+	glEnd();
+	*/
+
+
 	//glShadeModel(GL_SMOOTH); // Restore smooth shading.
 	//glTranslatef(-16.0f, -0.9f, 0.0f);
 	//glScalef(0.8f, 0.8f, 0.8f);
