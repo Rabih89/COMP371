@@ -35,6 +35,12 @@
 
 #include "imageloader.h"
 #include "md2model.h"
+#include  <Windows.h>
+#include <ctime>
+#include <cmath>
+#include <thread>         // std::this_thread::sleep_for
+#include <chrono>         // std::chrono::seconds
+ 
 
 using namespace std;
 int state = 0;
@@ -46,8 +52,9 @@ float _angle = 30.0f;
 MD2Model* _model;
 int _textureId;
 int _textureId2;
-
+static long font = (long)GLUT_BITMAP_8_BY_13; // Font selection.
 GLuint makeaTree;
+static int animationPeriod = 1000; // Time interval between frames.
 
 //The forward position of the guy relative to an arbitrary floor "tile"
 float _guyPos = 0;
@@ -82,6 +89,25 @@ GLuint loadTexture(Image *image) {
 
 void initRendering() 
 {
+	for(int i = 3;i > 0;--i)
+	{
+		
+		PlaySound(TEXT("countdown.wav"), NULL, SND_ASYNC|SND_FILENAME);
+		Sleep(100);
+		 std::cout << i << '\n';
+         std::this_thread::sleep_for (std::chrono::seconds(1));
+		
+	
+		Sleep(100);
+		
+	}
+	
+	
+	 PlaySound(TEXT("mario.wav"), NULL, SND_ASYNC|SND_FILENAME);
+	Sleep(100);
+	std::cout << "Go!!!!!!!!\n";
+	std::this_thread::sleep_for (std::chrono::seconds(1));
+	PlaySound(TEXT("outdoors.wav"), NULL, SND_ASYNC|SND_FILENAME|SND_LOOP);
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_LIGHTING);
 	glEnable(GL_LIGHT0);
@@ -92,6 +118,7 @@ void initRendering()
 	//Load the model
 	_model = MD2Model::load("tallguy.md2");
 	if (_model != NULL) {
+		
 		_model->setAnimation("run");
 	}
 	
@@ -142,11 +169,29 @@ void initRendering()
    glCullFace(GL_BACK);
 }
 
-void handleResize(int w, int h) {
+void handleResize(int w, int h) 
+{
 	glViewport(0, 0, w, h);
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	gluPerspective(45.0, (float)w / (float)h, 1.0, 200.0);
+}
+
+// Routine to draw a bitmap character string.
+void writeBitmapString(void *font, char *string)
+{  
+   char *c;
+
+   for (c = string; *c != '\0'; c++) glutBitmapCharacter(font, *c);
+}  
+
+void printInteraction(void)
+{
+   cout << "Interaction:" << endl;
+   cout << "Press a to toggle between animation on/off." << endl
+	    << "Press the up/down arrow keys to speed up/slow down animation." << endl
+		<< "Press r/R to rotate the viewpoint." << endl
+		<< "Press z/Z to zoom in/out." << endl;
 }
 
 void drawScene() 
@@ -177,12 +222,13 @@ void drawScene()
 	
     glPopMatrix();	
 
-	 // Draw a reflection of the real ball and torus by flipping them about the xz-plane
+	 // Draw a reflection of the guy by flipping him about the xz-plane
    // using a scaling transformation.
    glPushMatrix();
    glScalef(0.7, -1.0, 1.0);
+   
    glRotatef(90,100,200,-1000);
-   glTranslatef(-25.0f, 0.0f, 0.0f); 
+   glTranslatef(-25.0f, 0.0f, -2.0f); 
    glFrontFace(GL_CW); // Because of reflection front-faces are drawn clockwise. 
   _model->draw();
    glFrontFace(GL_CCW);  
@@ -199,7 +245,9 @@ void drawScene()
 		glTranslatef(0.0f, 4.5f, 0.0f);
 		glRotatef(-90.0f, 0.0f, 0.0f, 1.0f);
 		glScalef(0.5f, 0.5f, 0.5f);
-		_model->draw(0);
+	    
+		_model->draw();
+		
 		glPopMatrix();
 
 		
@@ -254,6 +302,18 @@ void drawScene()
 	glutSwapBuffers();
 }
 
+float t = 0.0;
+
+void idle (void)
+{
+    t += 0.1;
+    if (t > 2*3.14159)  
+    { 
+        t = 0.0; 
+    }
+    glutPostRedisplay();
+}
+
 void update(int value) {
 	_angle += 0.7f;
 	if (_angle > 360) {
@@ -277,7 +337,9 @@ void update(int value) {
 
 
 
-int main(int argc, char** argv) {
+int main(int argc, char** argv)
+{
+	//printInteraction();
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
 	glutInitWindowSize(400, 400);

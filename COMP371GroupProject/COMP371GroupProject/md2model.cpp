@@ -26,7 +26,7 @@
 
 #include "imageloader.h"
 #include "md2model.h"
-
+#include "windows.h"
 using namespace std;
 
 namespace {
@@ -430,15 +430,21 @@ void MD2Model::setAnimation(const char* name) {
 	 * character.  Normally, they indicate their frame number in the animation,
 	 * e.g. "run_1", "run_2", etc.
 	 */
+	
 	bool found = false;
-	for(int i = 0; i < numFrames; i++) {
+	for(int i = 0; i < numFrames; i++) 
+	{
 		MD2Frame* frame = frames + i;
+		
 		if (strlen(frame->name) > strlen(name) &&
 			strncmp(frame->name, name, strlen(name)) == 0 &&
 			!isalpha(frame->name[strlen(name)])) {
+			PlaySound(TEXT("footstep2.wav"), NULL, SND_ASYNC|SND_FILENAME|SND_LOOP);	
+			
 			if (!found) {
 				found = true;
 				startFrame = i;
+				
 			}
 			else {
 				endFrame = i;
@@ -476,10 +482,11 @@ void MD2Model::draw()
 	if (frameIndex1 > endFrame) {
 		frameIndex1 = startFrame;
 	}
-	
+		
 	int frameIndex2;
 	if (frameIndex1 < endFrame) {
 		frameIndex2 = frameIndex1 + 1;
+		
 	}
 	else {
 		frameIndex2 = startFrame;
@@ -495,13 +502,18 @@ void MD2Model::draw()
 	
 	//Draw the model as an interpolation between the two frames
 	glBegin(GL_TRIANGLES);
+		
+		
 	for(int i = 0; i < numTriangles; i++) {
+		
+
 		MD2Triangle* triangle = triangles + i;
 		for(int j = 0; j < 3; j++) {
 			MD2Vertex* v1 = frame1->vertices + triangle->vertices[j];
 			MD2Vertex* v2 = frame2->vertices + triangle->vertices[j];
 			Vec3f pos = v1->pos * (1 - frac) + v2->pos * frac;
 			Vec3f normal = v1->normal * (1 - frac) + v2->normal * frac;
+		
 			if (normal[0] == 0 && normal[1] == 0 && normal[2] == 0) {
 				normal = Vec3f(0, 0, 1);
 			}
@@ -510,6 +522,7 @@ void MD2Model::draw()
 			MD2TexCoord* texCoord = texCoords + triangle->texCoords[j];
 			glTexCoord2f(texCoord->texCoordX, texCoord->texCoordY);
 			glVertex3f(pos[0], pos[1], pos[2]);
+		
 		}
 	}
 	glEnd();
