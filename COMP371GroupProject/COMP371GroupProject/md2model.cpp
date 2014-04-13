@@ -439,7 +439,7 @@ void MD2Model::setAnimation(const char* name) {
 		if (strlen(frame->name) > strlen(name) &&
 			strncmp(frame->name, name, strlen(name)) == 0 &&
 			!isalpha(frame->name[strlen(name)])) {
-			PlaySound(TEXT("footstep2.wav"), NULL, SND_ASYNC|SND_FILENAME|SND_LOOP);	
+			PlaySound(TEXT("outdoor_footsteps.wav"), NULL, SND_ASYNC|SND_FILENAME|SND_LOOP);	
 			
 			if (!found) {
 				found = true;
@@ -533,9 +533,18 @@ void MD2Model::draw(int shadow)
 {
  
 	glPushMatrix();
-	
+	glTranslatef(-20.0,-5.0,0.0);	
+	glScalef(1.0, 0.0, 0.6);
+
+	//Load the shadow texture
+	int textureId2;
+	Image* image3 = loadBMP("shadow.bmp");
+	textureId2 = loadTexture(image3);
+	delete image3;
+
+
 	glEnable(GL_TEXTURE_2D);
-	glBindTexture(GL_TEXTURE_2D, textureId);
+	glBindTexture(GL_TEXTURE_2D, textureId2);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		

@@ -215,8 +215,8 @@ void drawScene()
 	
 	 glPushMatrix();
 	
-		 glTranslatef(-16.0f, -6.2f, 0.0f);
-		glScalef(0.8f, 0.7f, 0.8f);
+		// glTranslatef(-16.0f, -6.2f, 0.0f);
+	//	glScalef(0.8f, 0.7f, 0.8f);
 	   
 		_model->draw(1);
 	
@@ -230,7 +230,7 @@ void drawScene()
    glRotatef(90,100,200,-1000);
    glTranslatef(-25.0f, 0.0f, -2.0f); 
    glFrontFace(GL_CW); // Because of reflection front-faces are drawn clockwise. 
-  _model->draw();
+ // _model->draw();
    glFrontFace(GL_CCW);  
    glPopMatrix();
 	
