@@ -76,14 +76,19 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\glew.c" />
     <ClCompile Include="imageloader.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="md2model.cpp" />
+    <ClCompile Include="textfile.cpp" />
     <ClCompile Include="vec3f.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\glew.h" />
+    <ClInclude Include="..\wglew.h" />
     <ClInclude Include="imageloader.h" />
     <ClInclude Include="md2model.h" />
+    <ClInclude Include="textfile.h" />
     <ClInclude Include="vec3f.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
