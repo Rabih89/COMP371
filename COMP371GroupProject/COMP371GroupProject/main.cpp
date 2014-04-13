@@ -25,7 +25,8 @@
 #include <iostream>
 #include <stdlib.h>
 
-
+#define GLEW_STATIC
+#include "glew.h"
 #ifdef __APPLE__
 #include <OpenGL/OpenGL.h>
 #include <GLUT/glut.h>
@@ -35,6 +36,7 @@
 
 #include "imageloader.h"
 #include "md2model.h"
+#include "textfile.h"
 #include  <Windows.h>
 #include <ctime>
 #include <cmath>
@@ -58,17 +60,12 @@ static int animationPeriod = 1000; // Time interval between frames.
 
 //The forward position of the guy relative to an arbitrary floor "tile"
 float _guyPos = 0;
+bool isPlaying = true;
+GLuint v,f,f2,p;
+int shadingMode = 1;
 
 void cleanup() {
 	delete _model;
-}
-
-void handleKeypress(unsigned char key, int x, int y) {
-	switch (key) {
-		case 27: //Escape key
-			cleanup();
-			exit(0);
-	}
 }
 
 //Makes the image into a texture, and returns the id of the texture
@@ -192,6 +189,45 @@ void printInteraction(void)
 	    << "Press the up/down arrow keys to speed up/slow down animation." << endl
 		<< "Press r/R to rotate the viewpoint." << endl
 		<< "Press z/Z to zoom in/out." << endl;
+}
+
+void setShaders() {
+
+	char *vs = NULL,*fs = NULL,*fs2 = NULL;
+
+	v = glCreateShader(GL_VERTEX_SHADER);
+	f = glCreateShader(GL_FRAGMENT_SHADER);
+	f2 = glCreateShader(GL_FRAGMENT_SHADER);
+	if (shadingMode == 0){
+		// PHONG ours
+	   vs = textFileRead("phong.vert");
+	   fs = textFileRead("phong.frag");
+	}
+	if (shadingMode == 1){
+		// PHONG ours
+	   vs = textFileRead("myShader.vert");
+	   fs = textFileRead("myShader.frag");
+	}
+
+	const char * ff = fs;
+	const char * ff2 = fs2;
+	const char * vv = vs;
+
+	glShaderSource(v, 1, &vv,NULL);
+	glShaderSource(f, 1, &ff,NULL);
+
+	free(vs);free(fs);
+
+	glCompileShader(v);
+	glCompileShader(f);
+	glCompileShader(f2);
+
+	p = glCreateProgram();
+	glAttachShader(p,f);
+	glAttachShader(p,v);
+
+	glLinkProgram(p);
+	glUseProgram(p);
 }
 
 void drawScene() 
@@ -332,9 +368,29 @@ void update(int value) {
 	}
 	
 	glutPostRedisplay();
-	glutTimerFunc(25, update, 0);
+	if(isPlaying) glutTimerFunc(25, update, 0);
 }
 
+void handleKeypress(unsigned char key, int x, int y) {
+	switch (key) {
+		case 27: //Escape key
+			cleanup();
+			exit(0);
+		case 's':
+			if(!isPlaying) {
+				isPlaying = true;
+				glutTimerFunc(25, update, 0);
+			}
+			break;
+		case 'p':
+			isPlaying = false;
+			//glutTimerFunc(25, update, 0);
+			break;
+		case 't':
+			setShaders();
+			break;
+	}
+}
 
 
 int main(int argc, char** argv)
@@ -350,6 +406,17 @@ int main(int argc, char** argv)
 	glutDisplayFunc(drawScene);
 	glutKeyboardFunc(handleKeypress);
 	glutReshapeFunc(handleResize);
+
+	glEnable(GL_DEPTH_TEST);
+	glClearColor(1.0,1.0,1.0,1.0);
+	glewInit();
+	if (glewIsSupported("GL_VERSION_2_0"))
+		printf("Ready for OpenGL 2.0\n");
+	else {
+		printf("OpenGL 2.0 not supported\n");
+		exit(1);
+	}
+
 	glutTimerFunc(25, update, 0);
 	
 	glutMainLoop();
