@@ -379,11 +379,13 @@ void handleKeypress(unsigned char key, int x, int y) {
 		case 's':
 			if(!isPlaying) {
 				isPlaying = true;
+				PlaySound(TEXT("outdoor_footsteps.wav"), NULL, SND_ASYNC|SND_FILENAME|SND_LOOP);
 				glutTimerFunc(25, update, 0);
 			}
 			break;
 		case 'p':
 			isPlaying = false;
+			PlaySound(NULL, NULL, 0);
 			//glutTimerFunc(25, update, 0);
 			break;
 		case 't':
