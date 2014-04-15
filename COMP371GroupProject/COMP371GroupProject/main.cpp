@@ -57,7 +57,7 @@ int _textureId2;
 static long font = (long)GLUT_BITMAP_8_BY_13; // Font selection.
 GLuint makeaTree;
 static int animationPeriod = 1000; // Time interval between frames.
-
+int changeView = 0;
 //The forward position of the guy relative to an arbitrary floor "tile"
 float _guyPos = 0;
 bool isPlaying = true;
@@ -233,12 +233,54 @@ void setShaders() {
 void drawScene() 
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	  gluLookAt(0.0, 5.0, 30.0, 0.0, 10.0, 0.0, 0.0, 1.0, 0.0);
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
-	 glClearColor(0.74902, 0.847059, 1, 0.0); 
-	glTranslatef(0.0f, 0.0f, -20.0f);
-	glRotatef(-_angle, 0.0f, 1.0f, 0.0f);
+	if(changeView == 1)
+	{
+		
+			//glViewport(0,350,500,500);
+			 gluLookAt(0.0, 5.0, 30.0, 0.0, 10.0, 0.0, 0.0, 1.0, 0.0);
+			glMatrixMode(GL_MODELVIEW);
+			glLoadIdentity();
+			glClearColor(0.74902, 0.847059, 1, 0.0); 
+			glTranslatef(0.0f, 0.0f, -20.0f);
+			glRotatef(20.0, 0.0f, 1.0f, 0.0f);
+	}
+	if(changeView == 2)
+	{
+		//glViewport(520,350,500,500);
+		gluLookAt(0.0, 5.0, 30.0, 0.0, 10.0, 0.0, 0.0, 1.0, 0.0);
+		glMatrixMode(GL_MODELVIEW);
+		glLoadIdentity();
+		glClearColor(0.74902, 0.847059, 1, 0.0); 
+		glTranslatef(0.0f, 0.0f, -20.0f);
+		glRotatef(90.0, 0.0f, 1.0f, 0.0f);
+	}
+		if(changeView == 3)
+	{
+	//	glViewport(520,0,500,500);
+		gluLookAt(0.0, 5.0, 30.0, 0.0, 10.0, 0.0, 0.0, 1.0, 0.0);
+		glMatrixMode(GL_MODELVIEW);
+		glLoadIdentity();
+		glClearColor(0.74902, 0.847059, 1, 0.0); 
+		glTranslatef(0.0f, 0.0f, -20.0f);
+		glRotatef(-90.0, 0.0f, 90.0f, 0.0f);
+	}
+		if(changeView == 0)
+	{
+		//glViewport(0,0,500,500);
+		gluLookAt(0.0, 5.0, 30.0, 0.0, 10.0, 0.0, 0.0, 1.0, 0.0);
+		glMatrixMode(GL_MODELVIEW);
+		glLoadIdentity();
+		glClearColor(0.74902, 0.847059, 1, 0.0); 
+		glTranslatef(0.0f, 0.0f, -20.0f);
+		glRotatef(-180.0, 0.0f, 1.0f, 0.0f);
+
+	}
+	//  gluLookAt(0.0, 5.0, 30.0, 0.0, 10.0, 0.0, 0.0, 1.0, 0.0);
+	//glMatrixMode(GL_MODELVIEW);
+	//glLoadIdentity();
+	 //glClearColor(0.74902, 0.847059, 1, 0.0); 
+	//glTranslatef(0.0f, 0.0f, -20.0f);
+	//glRotatef(-_angle, 0.0f, 1.0f, 0.0f);
 	
 	GLfloat ambientLight[] = {0.3f, 0.3f, 0.3f, 1.0f};
 	glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ambientLight);
@@ -323,8 +365,8 @@ void drawScene()
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 
-
-
+	
+	 
 
 	//glShadeModel(GL_SMOOTH); // Restore smooth shading.
 	//glTranslatef(-16.0f, -0.9f, 0.0f);
@@ -390,6 +432,18 @@ void handleKeypress(unsigned char key, int x, int y) {
 			break;
 		case 't':
 			setShaders();
+			break;
+			case 'z':
+			changeView = 1;
+			break;
+		case 'x':
+			changeView = 2;
+			break;
+		case 'c':
+			changeView = 3;
+			break;
+		case 'v':
+			changeView = 0;
 			break;
 	}
 }
