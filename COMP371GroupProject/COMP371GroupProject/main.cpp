@@ -365,8 +365,17 @@ void drawScene()
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 
-	
-	 
+	/* Draw Sun */
+	glLoadIdentity();
+	glPushMatrix();
+	glTranslatef(15,20,-5);
+		// Draw the sun (disable lighting so it's always drawn as bright as possible regardless of any lighting going on)
+		glColor3ub(255, 255, 0);
+		glDisable(GL_LIGHTING);
+		glutSolidSphere(2.0f, 50, 50);
+		glEnable(GL_LIGHTING);
+	glPopMatrix();
+	/* Draw Sun */
 
 	//glShadeModel(GL_SMOOTH); // Restore smooth shading.
 	//glTranslatef(-16.0f, -0.9f, 0.0f);
